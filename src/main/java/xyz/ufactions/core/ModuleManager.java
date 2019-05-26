@@ -13,6 +13,8 @@ public class ModuleManager {
     private JavaPlugin plugin;
 
     private List<Module> modules = new ArrayList<Module>();
+    
+    private String hello = "Hello";
 
     public ModuleManager(JavaPlugin plugin) {
         this.plugin = plugin;
