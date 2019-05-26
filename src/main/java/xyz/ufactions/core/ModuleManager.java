@@ -12,6 +12,8 @@ public class ModuleManager {
 
     private JavaPlugin plugin;
 
+    private String test;
+
     private List<Module> modules = new ArrayList<Module>();
 
     public ModuleManager(JavaPlugin plugin) {
