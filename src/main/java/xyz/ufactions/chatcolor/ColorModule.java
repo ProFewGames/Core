@@ -17,8 +17,6 @@ import java.util.HashMap;
 import java.util.List;
 
 public class ColorModule extends Module {
-
-    private String testing = "testing";
     
     private HashMap<Player, ChatColor> colors = new HashMap<>();
 
