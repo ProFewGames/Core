@@ -1,8 +1,9 @@
 package xyz.ufactions.core;
 
 import org.bukkit.plugin.java.JavaPlugin;
-import xyz.ufactions.Module;
+import xyz.ufactions.api.Module;
 import xyz.ufactions.chatcolor.ColorModule;
+import xyz.ufactions.tags.TitleModule;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -20,6 +21,7 @@ public class ModuleManager {
 
     public void loadModules() {
         modules.add(new ColorModule(plugin));
+        modules.add(new TitleModule(plugin));
     }
 
     public void unloadModules() {

@@ -3,7 +3,7 @@ package xyz.ufactions.shop;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
-import xyz.ufactions.Module;
+import xyz.ufactions.api.Module;
 import xyz.ufactions.libs.ItemBuilder;
 
 public abstract class OrderingButton<PluginType extends Module> implements IButton {

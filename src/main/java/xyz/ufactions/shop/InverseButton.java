@@ -2,8 +2,7 @@ package xyz.ufactions.shop;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-
-import xyz.ufactions.Module;
+import xyz.ufactions.api.Module;
 
 public abstract class InverseButton<PluginType extends Module> extends ShopItem<PluginType> {
 

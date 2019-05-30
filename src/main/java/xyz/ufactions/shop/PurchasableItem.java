@@ -9,7 +9,7 @@ import org.bukkit.event.inventory.ClickType;
 
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
-import xyz.ufactions.Module;
+import xyz.ufactions.api.Module;
 import xyz.ufactions.libs.C;
 import xyz.ufactions.libs.F;
 import xyz.ufactions.libs.UtilMath;
