@@ -7,6 +7,8 @@
     <groupId>xyz.ufactions</groupId>
     <artifactId>core</artifactId>
     <version>1</version>
+         
+Hello
 
     <repositories>
         <repository>
