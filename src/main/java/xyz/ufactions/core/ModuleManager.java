@@ -3,6 +3,7 @@ package xyz.ufactions.core;
 import org.bukkit.plugin.java.JavaPlugin;
 import xyz.ufactions.api.Module;
 import xyz.ufactions.chatcolor.ColorModule;
+import xyz.ufactions.playtime.PlaytimeModule;
 import xyz.ufactions.tags.TitleModule;
 
 import java.util.ArrayList;
@@ -20,6 +21,7 @@ public class ModuleManager {
     }
 
     public void loadModules() {
+        modules.add(new PlaytimeModule(plugin));
         modules.add(new ColorModule(plugin));
         modules.add(new TitleModule(plugin));
     }
