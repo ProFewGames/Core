@@ -3,8 +3,10 @@ package xyz.ufactions.core;
 import org.bukkit.plugin.java.JavaPlugin;
 import xyz.ufactions.api.Module;
 import xyz.ufactions.chatcolor.ColorModule;
+import xyz.ufactions.coins.CoinModule;
 import xyz.ufactions.playtime.PlaytimeModule;
 import xyz.ufactions.scoreboard.ScoreboardModule;
+import xyz.ufactions.sidekick.SidekickModule;
 import xyz.ufactions.tags.TitleModule;
 import xyz.ufactions.weather.WeatherModule;
 
@@ -28,6 +30,8 @@ public class ModuleManager {
         modules.add(new TitleModule(plugin));
         modules.add(new WeatherModule(plugin));
         modules.add(new ScoreboardModule(plugin));
+        modules.add(new CoinModule(plugin));
+        modules.add(new SidekickModule(plugin));
     }
 
     public void unloadModules() {
