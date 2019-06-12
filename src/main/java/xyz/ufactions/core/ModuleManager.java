@@ -2,6 +2,7 @@ package xyz.ufactions.core;
 
 import org.bukkit.plugin.java.JavaPlugin;
 import xyz.ufactions.api.Module;
+import xyz.ufactions.builder.BuilderModule;
 import xyz.ufactions.chatcolor.ColorModule;
 import xyz.ufactions.coins.CoinModule;
 import xyz.ufactions.playtime.PlaytimeModule;
@@ -32,6 +33,7 @@ public class ModuleManager {
         modules.add(new ScoreboardModule(plugin));
         modules.add(new CoinModule(plugin));
         modules.add(new SidekickModule(plugin));
+        modules.add(new BuilderModule(plugin));
     }
 
     public void unloadModules() {
