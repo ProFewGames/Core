@@ -4,6 +4,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import xyz.ufactions.api.Module;
 import xyz.ufactions.chatcolor.ColorModule;
 import xyz.ufactions.playtime.PlaytimeModule;
+import xyz.ufactions.scoreboard.ScoreboardModule;
 import xyz.ufactions.tags.TitleModule;
 import xyz.ufactions.weather.WeatherModule;
 
@@ -26,6 +27,7 @@ public class ModuleManager {
         modules.add(new ColorModule(plugin));
         modules.add(new TitleModule(plugin));
         modules.add(new WeatherModule(plugin));
+        modules.add(new ScoreboardModule(plugin));
     }
 
     public void unloadModules() {
