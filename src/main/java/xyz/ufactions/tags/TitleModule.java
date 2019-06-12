@@ -92,7 +92,7 @@ public class TitleModule extends Module {
 
 	@EventHandler
 	public void onChat(AsyncPlayerChatEvent e) {
-		e.setFormat(e.getFormat().replace("[TAG]", tagManager.getTagFormatted(e.getPlayer())));
+		e.setFormat(e.getFormat().replace("{TAG}", tagManager.getTagFormatted(e.getPlayer())));
 	}
 
 	@EventHandler

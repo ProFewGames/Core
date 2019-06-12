@@ -5,6 +5,7 @@ import xyz.ufactions.api.Module;
 import xyz.ufactions.chatcolor.ColorModule;
 import xyz.ufactions.playtime.PlaytimeModule;
 import xyz.ufactions.tags.TitleModule;
+import xyz.ufactions.weather.WeatherModule;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -24,10 +25,11 @@ public class ModuleManager {
         modules.add(new PlaytimeModule(plugin));
         modules.add(new ColorModule(plugin));
         modules.add(new TitleModule(plugin));
+        modules.add(new WeatherModule(plugin));
     }
 
     public void unloadModules() {
-        Iterator<Module> iterator = modules.iterator();
+        Iterator<Module> iterator = new ArrayList<>(modules).iterator();
         while(iterator.hasNext()) {
             Module module = iterator.next();
             module.onDisable();
