@@ -9,11 +9,12 @@ import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 
+import xyz.ufactions.Main;
 import xyz.ufactions.libs.C;
 
 public class ScoreboardData {
 
-	private String title = "UPrison";
+	private String title;
 	private Objective objective;
 	private int shineIndex;
 	private Scoreboard scoreboard;
@@ -21,7 +22,8 @@ public class ScoreboardData {
 
 	private HashMap<String, String> data = new HashMap<>();
 
-	public ScoreboardData(Player player) {
+	public ScoreboardData(Player player, String title) {
+		this.title = title;
 		scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
 
 		objective = scoreboard.registerNewObjective("stats", "dummy");
@@ -46,6 +48,10 @@ public class ScoreboardData {
 
 	public Scoreboard getScoreboard() {
 		return scoreboard;
+	}
+
+	public void setDisplayName(String displayName) {
+		this.title = displayName;
 	}
 
 	public void updateTitle() {

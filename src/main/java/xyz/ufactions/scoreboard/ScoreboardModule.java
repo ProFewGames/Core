@@ -26,8 +26,11 @@ public class ScoreboardModule extends Module {
 	private HashSet<Player> toggledScoreboards = new HashSet<>();
 	public boolean TogglableScoreboard = true;
 
-	public ScoreboardModule(JavaPlugin plugin) {
+	private String displayName;
+
+	public ScoreboardModule(JavaPlugin plugin, String displayName) {
 		super("Scoreboard Module", plugin);
+		this.displayName = displayName;
 		iScoreboard = new IScoreboard() {
 
 			@Override
@@ -39,11 +42,18 @@ public class ScoreboardModule extends Module {
 			}
 		};
 		for (Player player : UtilServer.getPlayers()) {
-			map.put(player, new ScoreboardData(player));
+			map.put(player, new ScoreboardData(player, displayName));
 		}
 	}
 
-	@Override
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+        for(Player player : Bukkit.getOnlinePlayers()) {
+        	map.get(player).setDisplayName(displayName);
+		}
+    }
+
+    @Override
 	public void addCommands() {
 		addCommand(new ScoreboardCommand(this));
 	}
@@ -68,7 +78,7 @@ public class ScoreboardModule extends Module {
 	@EventHandler
 	public void onJoin(PlayerJoinEvent e) {
 		Player player = e.getPlayer();
-		map.put(player, new ScoreboardData(player));
+		map.put(player, new ScoreboardData(player, displayName));
 	}
 
 	@EventHandler
