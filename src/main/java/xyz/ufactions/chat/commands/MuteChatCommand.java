@@ -15,8 +15,7 @@ public class MuteChatCommand extends CommandBase<ChatModule> {
 
 	@Override
 	public void execute(Player player, String[] args) {
-		String aZ = "core.mutechat";
-		if(!player.hasPermission(aZ)){ 
+		if(!player.hasPermission("core.command.mutechat")){
 			player.sendMessage(F.noPermission());
 			return;
 		}

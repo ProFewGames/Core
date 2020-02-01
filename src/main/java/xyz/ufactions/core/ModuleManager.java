@@ -6,6 +6,7 @@ import xyz.ufactions.builder.BuilderModule;
 import xyz.ufactions.chat.ChatModule;
 import xyz.ufactions.chatcolor.ColorModule;
 import xyz.ufactions.coins.CoinModule;
+import xyz.ufactions.help.HelpModule;
 import xyz.ufactions.permissions.PermissionsModule;
 import xyz.ufactions.playtime.PlaytimeModule;
 import xyz.ufactions.scoreboard.ScoreboardModule;
@@ -28,16 +29,21 @@ public class ModuleManager {
     }
 
     public void loadModules() {
-        modules.add(new PermissionsModule(plugin));
-        modules.add(new PlaytimeModule(plugin));
-        modules.add(new ColorModule(plugin));
-        modules.add(new TitleModule(plugin));
-        modules.add(new WeatherModule(plugin));
-        modules.add(new ScoreboardModule(plugin, "Loading..."));
-        modules.add(new CoinModule(plugin));
-        modules.add(new SidekickModule(plugin));
-        modules.add(new BuilderModule(plugin));
-        modules.add(new ChatModule(plugin));
+//        loadModule(new PermissionsModule(plugin)); FIXME Waiting for module to be fixed to be re-enabled in core
+        loadModule(new PlaytimeModule(plugin));
+        loadModule(new ColorModule(plugin));
+        loadModule(new TitleModule(plugin));
+        loadModule(new WeatherModule(plugin));
+        loadModule(new ScoreboardModule(plugin, "Loading..."));
+        loadModule(new CoinModule(plugin));
+        loadModule(new SidekickModule(plugin));
+        loadModule(new BuilderModule(plugin));
+        loadModule(new ChatModule(plugin));
+        loadModule(new HelpModule(plugin));
+    }
+
+    public void loadModule(Module module) {
+        modules.add(module);
     }
 
     public void unloadModules() {

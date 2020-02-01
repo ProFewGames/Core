@@ -22,7 +22,7 @@ public class BuilderCommand extends MultiCommandBase<BuilderModule> {
 
 	@Override
 	protected void help(Player player, String[] args) {
-		if (!player.hasPermission("core.builder")) {
+		if (!player.hasPermission("core.command.builder")) {
 			player.sendMessage(F.noPermission());
 			return;
 		}

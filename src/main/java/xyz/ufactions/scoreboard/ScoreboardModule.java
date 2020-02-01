@@ -46,6 +46,14 @@ public class ScoreboardModule extends Module {
 		}
 	}
 
+	public String getBlankLine(int lines) {
+		StringBuilder builder = new StringBuilder();
+		for(int i = 0; i < lines; i++) {
+			builder.append(" ");
+		}
+		return builder.toString();
+	}
+
     public void setDisplayName(String displayName) {
         this.displayName = displayName;
         for(Player player : Bukkit.getOnlinePlayers()) {

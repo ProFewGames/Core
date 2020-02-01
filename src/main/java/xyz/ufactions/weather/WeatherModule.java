@@ -24,15 +24,20 @@ public class WeatherModule extends Module {
     public WeatherModule(JavaPlugin plugin) {
         super("Weather", plugin);
 
-        if(getDataFolder().exists()) {
-            File file = new File(getDataFolder(), "data.yml");
-            if (file.exists()) {
-                FileConfiguration config = YamlConfiguration.loadConfiguration(file);
-                for (String string : config.getStringList("options")) {
-                    weather.add(WeatherOptions.decode(string));
+        runSync(new Runnable() {
+            @Override
+            public void run() {
+                if(getDataFolder().exists()) {
+                    File file = new File(getDataFolder(), "data.yml");
+                    if (file.exists()) {
+                        FileConfiguration config = YamlConfiguration.loadConfiguration(file);
+                        for (String string : config.getStringList("options")) {
+                            weather.add(WeatherOptions.decode(string));
+                        }
+                    }
                 }
             }
-        }
+        });
     }
 
     public void save() {

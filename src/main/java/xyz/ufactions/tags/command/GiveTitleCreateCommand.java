@@ -22,7 +22,7 @@ public class GiveTitleCreateCommand extends CommandBase<TitleModule> {
 
 	@Override
 	public List<String> onTabComplete(CommandSender sender, String commandLabel, String[] args) {
-		if (sender.hasPermission("core.tag.give")) {
+		if (sender.hasPermission("core.command.givetitlecreate")) {
 			if (args.length == 1) {
 				return getMatches(args[0], UtilServer.getPlayerNames());
 			}
@@ -33,8 +33,7 @@ public class GiveTitleCreateCommand extends CommandBase<TitleModule> {
 	@SuppressWarnings("deprecation")
 	@Override
 	public void execute(final Player player, final String[] args) {
-		String aZ = "core.tags.give";
-		if (!player.hasPermission(aZ)) {
+		if (!player.hasPermission("core.command.givetitlecreate")) {
 			player.sendMessage(F.noPermission());
 			return;
 		}

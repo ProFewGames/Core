@@ -16,8 +16,7 @@ public class WeatherCommand extends CommandBase<WeatherModule> {
 
 	@Override
 	public void execute(Player caller, String[] args) {
-		String aZ = "core.weather";
-		if (!caller.hasPermission(aZ)) {
+		if (!caller.hasPermission("core.command.weather")) {
 			UtilPlayer.message(caller, F.noPermission());
 			return;
 		}

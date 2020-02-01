@@ -16,7 +16,7 @@ public class PasteCommand extends CommandBase<BuilderModule> {
 
 	@Override
 	public void execute(Player player, String[] args) {
-		if(!player.hasPermission("core.builder.paste")) {
+		if(!player.hasPermission("core.command.builder.paste")) {
 			player.sendMessage(F.noPermission());
 			return;
 		}

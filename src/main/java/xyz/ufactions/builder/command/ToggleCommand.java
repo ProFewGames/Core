@@ -15,7 +15,7 @@ public class ToggleCommand extends CommandBase<BuilderModule> {
 
 	@Override
 	public void execute(Player player, String[] args) {
-		if(!player.hasPermission("core.builder.toggle")) {
+		if(!player.hasPermission("core.command.builder.toggle")) {
 			player.sendMessage(F.noPermission());
 			return;
 		}
