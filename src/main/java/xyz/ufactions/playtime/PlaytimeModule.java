@@ -135,6 +135,14 @@ public class PlaytimeModule extends Module {
 		return new User(uuid, config.getLong(uuid.toString(), 0L));
 	}
 
+	public long getLastCache() {
+		return System.currentTimeMillis() - lastCache;
+	}
+
+	public long getRecacheTime() {
+		return recacheTime;
+	}
+
 	private List<User> recache() {
 		List<User> users = new ArrayList<>();
 		for (OfflinePlayer player : Bukkit.getOfflinePlayers()) {

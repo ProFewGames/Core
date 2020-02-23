@@ -6,11 +6,15 @@ import xyz.ufactions.builder.BuilderModule;
 import xyz.ufactions.chat.ChatModule;
 import xyz.ufactions.chatcolor.ColorModule;
 import xyz.ufactions.coins.CoinModule;
+import xyz.ufactions.crates.CratesModule;
 import xyz.ufactions.help.HelpModule;
-import xyz.ufactions.permissions.PermissionsModule;
+import xyz.ufactions.market.MarketModule;
+import xyz.ufactions.npc.NPCModule;
 import xyz.ufactions.playtime.PlaytimeModule;
 import xyz.ufactions.scoreboard.ScoreboardModule;
+import xyz.ufactions.shop.PurchasableItem;
 import xyz.ufactions.sidekick.SidekickModule;
+import xyz.ufactions.tablist.Tablist;
 import xyz.ufactions.tags.TitleModule;
 import xyz.ufactions.weather.WeatherModule;
 
@@ -20,6 +24,8 @@ import java.util.List;
 
 public class ModuleManager {
 
+    public static boolean DEBUG = true;
+
     private JavaPlugin plugin;
 
     private List<Module> modules = new ArrayList<Module>();
@@ -28,18 +34,22 @@ public class ModuleManager {
         this.plugin = plugin;
     }
 
-    public void loadModules() {
+    public void loadModules(String serverName) {
 //        loadModule(new PermissionsModule(plugin)); FIXME Waiting for module to be fixed to be re-enabled in core
+        loadModule(new CratesModule(plugin));
         loadModule(new PlaytimeModule(plugin));
         loadModule(new ColorModule(plugin));
         loadModule(new TitleModule(plugin));
         loadModule(new WeatherModule(plugin));
-        loadModule(new ScoreboardModule(plugin, "Loading..."));
+        loadModule(new ScoreboardModule(plugin, serverName));
         loadModule(new CoinModule(plugin));
         loadModule(new SidekickModule(plugin));
         loadModule(new BuilderModule(plugin));
         loadModule(new ChatModule(plugin));
         loadModule(new HelpModule(plugin));
+        loadModule(new Tablist(plugin, serverName));
+        loadModule(new MarketModule(plugin));
+        loadModule(new NPCModule(plugin));
     }
 
     public void loadModule(Module module) {

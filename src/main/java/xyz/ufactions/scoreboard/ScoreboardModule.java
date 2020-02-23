@@ -96,6 +96,8 @@ public class ScoreboardModule extends Module {
 		toggledScoreboards.remove(player);
 	}
 
+	private int sec = 0;
+
 	@EventHandler
 	public void onUpdate(UpdateEvent e) {
 		if (e.getType() != UpdateType.TICK)
@@ -106,6 +108,10 @@ public class ScoreboardModule extends Module {
 		if (scoreboardTick != 0)
 			return;
 
+		if(sec < 20) {
+			sec++;
+		}
+
 		for (Player player : UtilServer.getPlayers()) {
 			if (toggledScoreboards.contains(player))
 				return;
@@ -115,7 +121,12 @@ public class ScoreboardModule extends Module {
 
 			data.updateTitle();
 
-			iScoreboard.update(player, data);
+			if(sec >= 20) {
+				iScoreboard.update(player, data);
+			}
+		}
+		if(sec >= 20) {
+			sec = 0;
 		}
 	}
 }
