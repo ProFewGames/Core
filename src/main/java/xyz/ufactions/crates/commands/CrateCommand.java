@@ -1,9 +1,5 @@
 package xyz.ufactions.crates.commands;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -14,18 +10,20 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.util.BlockIterator;
-
 import xyz.ufactions.commands.CommandBase;
 import xyz.ufactions.crates.CratesModule;
 import xyz.ufactions.crates.files.CrateFiles;
 import xyz.ufactions.crates.managers.LocationManager;
 import xyz.ufactions.crates.objects.Crate;
 import xyz.ufactions.crates.utils.ChatUtil;
-import xyz.ufactions.crates.utils.UtilChat;
 import xyz.ufactions.libs.C;
 import xyz.ufactions.libs.F;
 import xyz.ufactions.libs.UtilPlayer;
 import xyz.ufactions.libs.UtilServer;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class CrateCommand extends CommandBase<CratesModule> {
 

@@ -1,17 +1,18 @@
 package xyz.ufactions.help;
 
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import xyz.ufactions.api.Module;
 import xyz.ufactions.help.commands.Changelog;
+import xyz.ufactions.help.commands.ReportCommand;
 import xyz.ufactions.help.commands.TodoCommand;
 import xyz.ufactions.help.data.ChangeLog;
 import xyz.ufactions.help.data.TodoStatus;
 import xyz.ufactions.help.data.TodoTask;
 import xyz.ufactions.help.repository.ChangelogRepository;
+import xyz.ufactions.help.repository.ReportRepository;
 import xyz.ufactions.help.repository.TODORepository;
 import xyz.ufactions.libs.C;
 import xyz.ufactions.libs.F;
@@ -24,6 +25,7 @@ import java.util.UUID;
 
 public class HelpModule extends Module {
 
+    private ReportRepository reportRepository;
     private TODORepository repository;
     private ChangelogRepository changelog;
 
@@ -34,6 +36,7 @@ public class HelpModule extends Module {
     public HelpModule(JavaPlugin plugin) {
         super("Help", plugin);
 
+        reportRepository = new ReportRepository(plugin);
         changelog = new ChangelogRepository(plugin);
         repository = new TODORepository(plugin);
 
@@ -46,6 +49,7 @@ public class HelpModule extends Module {
     public void addCommands() {
         addCommand(new Changelog(this));
         addCommand(new TodoCommand(this));
+        addCommand(new ReportCommand(this));
     }
 
 //    @EventHandler
@@ -167,5 +171,9 @@ public class HelpModule extends Module {
 
     public boolean isDeveloper(Player player) {
         return developers.contains(player.getName());
+    }
+
+    public ReportRepository getReportRepository() {
+        return reportRepository;
     }
 }

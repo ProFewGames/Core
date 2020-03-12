@@ -16,6 +16,7 @@ import xyz.ufactions.crates.managers.LocationManager;
 import xyz.ufactions.crates.objects.Crate;
 import xyz.ufactions.crates.utils.UtilChat;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 
@@ -31,8 +32,8 @@ public class CratesModule extends Module {
         if (CrateFiles.getInstance().getCrateFiles().isEmpty()) {
             CrateFiles.getInstance().createCrate(false, "default");
         }
-        for (FileConfiguration config : CrateFiles.getInstance().getCrateFiles()) {
-            new Crate(config);
+        for (File file : CrateFiles.getInstance().getCrateFiles()) {
+            new Crate(file);
         }
         registerEvents(new InventoryClick());
         registerEvents(new PlayerInteract());
@@ -59,8 +60,8 @@ public class CratesModule extends Module {
         for (Crate crate : new ArrayList<>(Crate.getCrates())) {
             crate.disable();
         }
-        for (FileConfiguration config : CrateFiles.getInstance().getCrateFiles()) {
-            new Crate(config);
+        for (File file : CrateFiles.getInstance().getCrateFiles()) {
+            new Crate(file);
         }
         loadHolograms();
     }

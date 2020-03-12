@@ -22,11 +22,10 @@ public class CrateFiles {
 		return instance;
 	}
 
-	public List<FileConfiguration> getCrateFiles() {
-		List<FileConfiguration> files = new ArrayList<>();
+	public List<File> getCrateFiles() {
+		List<File> files = new ArrayList<>();
 		for (String rawName : getRawFiles()) {
-			files.add(YamlConfiguration
-					.loadConfiguration(new File(CratesModule.getInstance().getPlugin().getDataFolder(), "/crates/" + rawName)));
+			files.add(new File(CratesModule.getInstance().getPlugin().getDataFolder(), "/crates/" + rawName));
 		}
 		return files;
 	}
@@ -95,7 +94,7 @@ public class CrateFiles {
 			e.printStackTrace();
 		}
 		if (createInternally) {
-			new Crate(config);
+			new Crate(file);
 		}
 		return true;
 	}

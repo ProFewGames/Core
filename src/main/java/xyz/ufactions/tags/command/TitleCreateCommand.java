@@ -21,7 +21,7 @@ public class TitleCreateCommand extends CommandBase<TitleModule> {
 			UtilPlayer.message(player, F.main(Plugin.getName(), C.cRed + "    You don't have any " + C.cRed + C.Line
 					+ "/titlecreate" + ChatColor.RESET + C.cRed + " credits!"));
 			UtilPlayer.message(player, F.main(Plugin.getName(),
-					C.cGold + "  You can buy more at " + C.cYellow + C.Line + "buy.ufactions.xyz"));
+					C.cGold + "  You can buy more at " + C.cYellow + C.Line + "n/a"));
 			return;
 		} else {
 			if (args.length != 1) {

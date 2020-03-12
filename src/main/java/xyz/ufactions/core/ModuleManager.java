@@ -1,5 +1,6 @@
 package xyz.ufactions.core;
 
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import xyz.ufactions.api.Module;
 import xyz.ufactions.builder.BuilderModule;
@@ -12,7 +13,6 @@ import xyz.ufactions.market.MarketModule;
 import xyz.ufactions.npc.NPCModule;
 import xyz.ufactions.playtime.PlaytimeModule;
 import xyz.ufactions.scoreboard.ScoreboardModule;
-import xyz.ufactions.shop.PurchasableItem;
 import xyz.ufactions.sidekick.SidekickModule;
 import xyz.ufactions.tablist.Tablist;
 import xyz.ufactions.tags.TitleModule;

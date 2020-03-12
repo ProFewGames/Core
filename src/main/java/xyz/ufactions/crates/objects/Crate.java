@@ -1,21 +1,23 @@
 package xyz.ufactions.crates.objects;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import org.apache.commons.io.FilenameUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-
 import xyz.ufactions.crates.managers.CrateSpinner;
 import xyz.ufactions.crates.managers.SoundManager;
 import xyz.ufactions.crates.utils.MathUtil;
 import xyz.ufactions.libs.F;
 import xyz.ufactions.libs.ItemBuilder;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Crate {
 
@@ -40,16 +42,10 @@ public class Crate {
     private CrateType crateType;
     private static List<Crate> crates = new ArrayList<>();
 
-    public Crate(FileConfiguration config) {
-        // FIXME
-//        Bukkit.broadcastMessage("Delta " + config.getCurrentPath());
+    public Crate(File file) {
         try {
-//            Bukkit.broadcastMessage("A " + config.getName());
-//            Bukkit.broadcastMessage("B " + config.getName().replaceAll(" ", "_"));
-//            Bukkit.broadcastMessage("C " + config.getName().replaceAll(" ", "_").toLowerCase());
-//            Bukkit.broadcastMessage("D " + F.capitalizeFirstLetter(config.getName().replaceAll(" ", "_").toLowerCase()));
-//            this.genericName = F.capitalizeFirstLetter(config.getName().replaceAll(" ", "_").toLowerCase());
-            this.genericName = "test";
+            this.genericName = F.capitalizeFirstLetter(FilenameUtils.getBaseName(file.getName()).replaceAll(" ", "_").toLowerCase());
+            FileConfiguration config = YamlConfiguration.loadConfiguration(file);
             this.name = ChatColor.translateAlternateColorCodes('&', config.getString("Crate.name"));
             this.crateType = CrateType.valueOf(config.getString("Crate.type"));
             this.playerMessage = config.getString("Crate.player message");
@@ -113,8 +109,7 @@ public class Crate {
 
     public static Crate getCrate(String name) {
         for (Crate crate : crates) {
-            if (crate.getGenericName().equalsIgnoreCase(name)
-                    || crate.getGenericName().replaceAll(" ", "_").equalsIgnoreCase(name)) {
+            if (crate.getGenericName().equalsIgnoreCase(name)) {
                 return crate;
             }
         }
