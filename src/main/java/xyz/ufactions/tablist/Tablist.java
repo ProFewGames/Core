@@ -1,9 +1,6 @@
 package xyz.ufactions.tablist;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
+import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -11,11 +8,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.Scoreboard;
-
-import ru.tehkode.permissions.PermissionGroup;
-import ru.tehkode.permissions.bukkit.PermissionsEx;
 import xyz.ufactions.api.Module;
-import xyz.ufactions.core.ModuleManager;
 import xyz.ufactions.libs.C;
 import xyz.ufactions.libs.TitleAPI;
 import xyz.ufactions.libs.UtilServer;
@@ -24,112 +17,117 @@ import xyz.ufactions.tablist.repository.TablistRepository;
 import xyz.ufactions.updater.UpdateType;
 import xyz.ufactions.updater.event.UpdateEvent;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 public class Tablist extends Module {
 
-	private List<Player> processing = new ArrayList<>();
+    private List<Player> processing = new ArrayList<>();
 
-	private TablistRepository repository;
+    private TablistRepository repository;
 
-	private String serverName = "A Minecraft Server";
+    private String serverName = "A Minecraft Server";
 
-	public Tablist(JavaPlugin plugin, String serverName) {
-		super("Tablist", plugin);
+    private Permission permission;
 
-		this.serverName = serverName;
+    public Tablist(JavaPlugin plugin, String serverName, Permission permission) {
+        super("Tablist", plugin);
 
-		this.repository = new TablistRepository(plugin);
+        this.serverName = serverName;
 
-		reload();
-	}
+        this.permission = permission;
 
-	public void reload() {
-		for (Player player : Bukkit.getOnlinePlayers()) {
-			overHead(player);
-		}
-	}
+        this.repository = new TablistRepository(plugin);
 
-	@EventHandler
-	public void onJoin(PlayerJoinEvent e) {
-		reload();
-	}
+        reload();
+    }
 
-	@Override
-	public void addCommands() {
-		addCommand(new TablistCommand(this));
-	}
+    public void reload() {
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            overHead(player);
+        }
+    }
 
-	public TablistRepository getRepository() {
-		return repository;
-	}
+    @EventHandler
+    public void onJoin(PlayerJoinEvent e) {
+        reload();
+    }
 
-	private void headerFooter() {
-		for (Player pls : UtilServer.getPlayers()) {
-			String header = C.mHead + C.Bold + serverName;
-			String footer = C.cGray + "(" + Bukkit.getOnlinePlayers().size() + " players)";
-			TitleAPI.sendTabHF(pls, header, footer);
-		}
-	}
+    @Override
+    public void addCommands() {
+        addCommand(new TablistCommand(this));
+    }
 
-	@EventHandler
-	public void onUpdate(UpdateEvent e) {
-		if (e.getType() != UpdateType.SLOWER)
-			return;
+    public TablistRepository getRepository() {
+        return repository;
+    }
 
-		headerFooter();
-	}
+    private void headerFooter() {
+        for (Player pls : UtilServer.getPlayers()) {
+            String header = C.mHead + C.Bold + serverName;
+            String footer = C.cGray + "(" + Bukkit.getOnlinePlayers().size() + " players)";
+            TitleAPI.sendTabHF(pls, header, footer);
+        }
+    }
 
-	private void overHead(Player player) {
-		runAsync(new Runnable() {
+    @EventHandler
+    public void onUpdate(UpdateEvent e) {
+        if (e.getType() != UpdateType.SLOWER)
+            return;
 
-			@Override
-			public void run() {
-				if (processing.contains(player))
-					return;
-				processing.add(player);
+        headerFooter();
+    }
 
-				headerFooter();
+    private void overHead(Player player) {
+        runAsync(new Runnable() {
 
-				Scoreboard scoreboard = player.getScoreboard();
+            @Override
+            public void run() {
+                if (processing.contains(player))
+                    return;
+                processing.add(player);
 
-				HashMap<String, String> tablist = repository.getTablist();
-				for(PermissionGroup group : PermissionsEx.getPermissionManager().getGroups()) {
-					String groupName = group.getName();
-					if (scoreboard.getTeam(groupName) != null) {
-						scoreboard.getTeam(groupName).unregister();
-					}
-					String prefix = tablist.get(groupName);
-					if (prefix == null)
-						prefix = "&4&lN/A&r";
-					prefix = ChatColor.translateAlternateColorCodes('&', prefix) + " ";
-					scoreboard.registerNewTeam(groupName).setPrefix(prefix);
-				}
+                headerFooter();
 
-				String group = PermissionsEx.getUser(player).getGroups()[0].getName();
-				validate(player, group, scoreboard);
+                Scoreboard scoreboard = player.getScoreboard();
 
-				for (Player otherPlayer : UtilServer.getPlayers()) {
-					String otherGroup = PermissionsEx.getUser(otherPlayer).getGroups()[0].getName();
-					validate(otherPlayer, otherGroup, scoreboard);
-					if (otherPlayer.getScoreboard() == null || otherPlayer.getScoreboard().getTeam(group) == null) {
-						overHead(otherPlayer);
-					}
-					validate(player, group, otherPlayer.getScoreboard());
-				}
-				processing.remove(player);
-			}
-		});
-	}
+                HashMap<String, String> tablist = repository.getTablist();
+                for (String group : permission.getGroups()) {
+                    if (scoreboard.getTeam(group) != null) {
+                        scoreboard.getTeam(group).unregister();
+                    }
+                    String prefix = tablist.get(group);
+                    if (prefix == null) prefix = "&4&lN/A&r";
+                    prefix = ChatColor.translateAlternateColorCodes('&', prefix);
+                    scoreboard.registerNewTeam(group).setPrefix(prefix);
+                }
+                String group = permission.getPrimaryGroup(player);
+                validate(player, group, scoreboard);
 
-	@SuppressWarnings("deprecation")
-	private void validate(Player player, String group, Scoreboard scoreboard) {
-		// FIXME Default group not setting
-		try {
-			if (scoreboard.getTeam(group) == null) {
-				scoreboard.getTeam(PermissionsEx.getPermissionManager().getGroups()[0].getName()).addPlayer(player);
-			} else {
-				scoreboard.getTeam(group).addPlayer(player);
-			}
-		}
-		catch(Exception e) {}
-	}
+                for (Player otherPlayer : UtilServer.getPlayers()) {
+                    String otherGroup = permission.getPrimaryGroup(otherPlayer);
+                    validate(otherPlayer, otherGroup, scoreboard);
+                    if (otherPlayer.getScoreboard() == null || otherPlayer.getScoreboard().getTeam(group) == null) {
+                        overHead(otherPlayer);
+                    }
+                    validate(player, group, otherPlayer.getScoreboard());
+                }
+                processing.remove(player);
+            }
+        });
+    }
+
+    @SuppressWarnings("deprecation")
+    private void validate(Player player, String group, Scoreboard scoreboard) {
+        // FIXME Default group not setting
+        try {
+            if (scoreboard.getTeam(group) == null) {
+                scoreboard.getTeam(permission.getGroups()[0]).addPlayer(player);
+            } else {
+                scoreboard.getTeam(group).addPlayer(player);
+            }
+        } catch (Exception e) {
+        }
+    }
 }

@@ -3,6 +3,7 @@ package xyz.ufactions.crates.objects;
 import org.apache.commons.io.FilenameUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -63,8 +64,7 @@ public class Crate {
             this.closeSound = SoundManager.getInstance().getSound(config.getString("Crate.close sound"));
             this.blockId = config.getInt("Crate.block id");
             this.blockData = config.getInt("Crate.block data");
-            this.crateItem = new ItemBuilder(blockId, blockData).name(name)
-                    .lore("&7Place this chest down anywhere", "&7to mark the location of", "&7your crate").build();
+            this.crateItem = new ItemBuilder(blockId, blockData).name(name).lore("&7Place this chest down anywhere", "&7to mark the location of", "&7your crate").build();
             this.key = new Key(config);
             this.prizes = new ArrayList<>();
             for (String prizeName : config.getConfigurationSection("Prizes").getKeys(false)) {

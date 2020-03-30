@@ -1,7 +1,5 @@
 package xyz.ufactions.builder;
 
-import java.util.HashMap;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -11,13 +9,14 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
-
 import xyz.ufactions.api.Module;
 import xyz.ufactions.builder.command.BuilderCommand;
 import xyz.ufactions.libs.*;
 import xyz.ufactions.libs.UtilEvent.ActionType;
 import xyz.ufactions.updater.UpdateType;
 import xyz.ufactions.updater.event.UpdateEvent;
+
+import java.util.HashMap;
 
 public class BuilderModule extends Module {
 

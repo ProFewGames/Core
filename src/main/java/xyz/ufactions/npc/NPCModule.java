@@ -14,14 +14,10 @@ public class NPCModule extends Module {
 
 	private HashMap<Module, HashSet<NPC>> moduleNPCs = new HashMap<>();
 
-	private LookCloseAddon lookCloseAddon;
-
 	public NPCModule(JavaPlugin plugin) {
 		super("npc", plugin);
 
 		SkinCaching.initialize(this);
-
-		lookCloseAddon = new LookCloseAddon(plugin);
 	}
 
 	@Override
@@ -35,7 +31,6 @@ public class NPCModule extends Module {
 		for (NPC npc : npcs) {
 			unregisterNPC(npc);
 		}
-		lookCloseAddon.npcs.clear();
 		npcs.clear();
 	}
 
@@ -68,11 +63,6 @@ public class NPCModule extends Module {
 	}
 
 	public void unregisterNPC(NPC npc) {
-		lookCloseAddon.remove(npc);
 		npc.despawn(true);
-	}
-
-	public LookCloseAddon getLookCloseAddon() {
-		return lookCloseAddon;
 	}
 }

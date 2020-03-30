@@ -2,6 +2,7 @@ package xyz.ufactions.help.commands;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import xyz.ufactions.commands.CommandBase;
 import xyz.ufactions.help.HelpModule;
@@ -16,6 +17,14 @@ public class ReportCommand extends CommandBase<HelpModule> {
 
     public ReportCommand(HelpModule plugin) {
         super(plugin, "report");
+    }
+
+    @Override
+    public List<String> onTabComplete(CommandSender sender, String commandLabel, String[] args) {
+        if (args.length == 0) {
+            return getPlayerMatches(sender, args[0]);
+        }
+        return super.onTabComplete(sender, commandLabel, args);
     }
 
     @Override
@@ -74,7 +83,7 @@ public class ReportCommand extends CommandBase<HelpModule> {
             UtilPlayer.searchOffline(list -> {
                 if (list.size() == 1) {
                     OfflinePlayer reported = list.get(0);
-                    if(reported.getPlayer() == player) {
+                    if (reported.getPlayer() == player) {
                         UtilPlayer.message(player, F.error(Plugin.getName(), "You cannot report yourself!"));
                         return;
                     }

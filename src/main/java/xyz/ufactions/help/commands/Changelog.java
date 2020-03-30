@@ -1,9 +1,7 @@
 package xyz.ufactions.help.commands;
 
-import java.util.List;
-
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
 import xyz.ufactions.commands.CommandBase;
 import xyz.ufactions.help.HelpModule;
 import xyz.ufactions.help.data.ChangeLog;
@@ -11,10 +9,21 @@ import xyz.ufactions.libs.C;
 import xyz.ufactions.libs.F;
 import xyz.ufactions.libs.UtilPlayer;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class Changelog extends CommandBase<HelpModule> {
 
     public Changelog(HelpModule module) {
         super(module, "changelog");
+    }
+
+    @Override
+    public List<String> onTabComplete(CommandSender sender, String commandLabel, String[] args) {
+        if (args.length == 1) {
+            return getMatches(args[0], Arrays.asList("add"));
+        }
+        return super.onTabComplete(sender, commandLabel, args);
     }
 
     @Override

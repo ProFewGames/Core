@@ -43,7 +43,6 @@ public class PlaytimeCommand extends CommandBase<PlaytimeModule> {
 
     @Override
     public List<String> onTabComplete(CommandSender sender, String commandLabel, String[] args) {
-    	// TODO Fix
-        return super.onTabComplete(sender, commandLabel, args);
+        return getPlayerMatches(sender, args[0]);
     }
 }

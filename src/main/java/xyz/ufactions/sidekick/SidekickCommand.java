@@ -1,5 +1,6 @@
 package xyz.ufactions.sidekick;
 
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import net.md_5.bungee.api.ChatColor;
@@ -7,6 +8,9 @@ import xyz.ufactions.commands.CommandBase;
 import xyz.ufactions.libs.F;
 import xyz.ufactions.libs.UtilPlayer;
 import xyz.ufactions.sidekick.ui.SidekickUI;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class SidekickCommand extends CommandBase<SidekickModule> {
 
@@ -20,6 +24,14 @@ public class SidekickCommand extends CommandBase<SidekickModule> {
 			return false;
 		}
 		return true;
+	}
+
+	@Override
+	public List<String> onTabComplete(CommandSender sender, String commandLabel, String[] args) {
+		if(args.length == 1) {
+			return getMatches(args[0], Arrays.asList("call", "remove", "name"));
+		}
+		return super.onTabComplete(sender, commandLabel, args);
 	}
 
 	@Override

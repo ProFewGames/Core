@@ -1,6 +1,8 @@
 package xyz.ufactions.core;
 
+import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import xyz.ufactions.api.Module;
 import xyz.ufactions.builder.BuilderModule;
@@ -10,6 +12,7 @@ import xyz.ufactions.coins.CoinModule;
 import xyz.ufactions.crates.CratesModule;
 import xyz.ufactions.help.HelpModule;
 import xyz.ufactions.market.MarketModule;
+import xyz.ufactions.monitor.LagMeter;
 import xyz.ufactions.npc.NPCModule;
 import xyz.ufactions.playtime.PlaytimeModule;
 import xyz.ufactions.scoreboard.ScoreboardModule;
@@ -30,6 +33,8 @@ public class ModuleManager {
 
     private List<Module> modules = new ArrayList<Module>();
 
+    private Permission permission;
+
     public ModuleManager(JavaPlugin plugin) {
         this.plugin = plugin;
     }
@@ -43,13 +48,21 @@ public class ModuleManager {
         loadModule(new WeatherModule(plugin));
         loadModule(new ScoreboardModule(plugin, serverName));
         loadModule(new CoinModule(plugin));
-        loadModule(new SidekickModule(plugin));
+        if (Bukkit.getPluginManager().isPluginEnabled("EchoPet")) {
+            System.out.println("EchoPet dependency found! Enabling Sidekick module...");
+            loadModule(new SidekickModule(plugin));
+        }
         loadModule(new BuilderModule(plugin));
         loadModule(new ChatModule(plugin));
         loadModule(new HelpModule(plugin));
-        loadModule(new Tablist(plugin, serverName));
+        if (!setupPermissions()) {
+            System.out.println("No vault permission dependency found! Tablist module not enabling");
+        } else {
+            loadModule(new Tablist(plugin, serverName, permission));
+        }
         loadModule(new MarketModule(plugin));
         loadModule(new NPCModule(plugin));
+        loadModule(new LagMeter(plugin));
     }
 
     public void loadModule(Module module) {
@@ -58,7 +71,7 @@ public class ModuleManager {
 
     public void unloadModules() {
         Iterator<Module> iterator = new ArrayList<>(modules).iterator();
-        while(iterator.hasNext()) {
+        while (iterator.hasNext()) {
             Module module = iterator.next();
             module.onDisable();
             modules.remove(module);
@@ -66,8 +79,8 @@ public class ModuleManager {
     }
 
     public Module getModule(String name) {
-        for(Module module : modules) {
-            if(module.getName().equalsIgnoreCase(name)) {
+        for (Module module : modules) {
+            if (module.getName().equalsIgnoreCase(name)) {
                 return module;
             }
         }
@@ -77,5 +90,13 @@ public class ModuleManager {
 
     public List<Module> getModules() {
         return modules;
+    }
+
+    private boolean setupPermissions() {
+        RegisteredServiceProvider<Permission> permissionProvider = Bukkit.getServer().getServicesManager().getRegistration(net.milkbowl.vault.permission.Permission.class);
+        if (permissionProvider != null) {
+            permission = permissionProvider.getProvider();
+        }
+        return (permission != null);
     }
 }
