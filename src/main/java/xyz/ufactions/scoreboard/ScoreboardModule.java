@@ -31,15 +31,11 @@ public class ScoreboardModule extends Module {
 	public ScoreboardModule(JavaPlugin plugin, String displayName) {
 		super("Scoreboard Module", plugin);
 		this.displayName = displayName;
-		iScoreboard = new IScoreboard() {
-
-			@Override
-			public void update(Player player, ScoreboardData data) {
-				Objective objective = data.getObjective();
-				objective.getScore(" ").setScore(2);
-				objective.getScore("Default Scoreboard").setScore(1);
-				objective.getScore("  ").setScore(0);
-			}
+		iScoreboard = (player, data) -> {
+			Objective objective = data.getObjective();
+			objective.getScore(" ").setScore(2);
+			objective.getScore("Default Scoreboard").setScore(1);
+			objective.getScore("  ").setScore(0);
 		};
 		for (Player player : UtilServer.getPlayers()) {
 			map.put(player, new ScoreboardData(player, displayName));

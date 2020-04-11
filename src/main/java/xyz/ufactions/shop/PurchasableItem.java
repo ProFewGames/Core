@@ -34,8 +34,14 @@ public abstract class PurchasableItem<PluginType extends Module> extends ShopIte
 
     private static List<String> parseLore(CurrencyType type, PurchasableData data, String... extra) {
         List<String> lore = new ArrayList<>();
-        lore.add(C.mBody + "Right click to sell " + F.elem(String.valueOf(data.getSellAmount())) + "x " + F.capitalizeFirstLetter(data.getMaterial().name().replaceAll("_", " ")) + " for " + type.getSymbol() + F.elem(UtilMath.fixMoney(data.getSellCost() * data.getBuyAmount())));
-        lore.add(C.mBody + "Left click to buy " + F.elem(String.valueOf(data.getBuyAmount())) + "x " + F.capitalizeFirstLetter(data.getMaterial().name().replaceAll("_", " ")) + " for " + type.getSymbol() + F.elem(UtilMath.fixMoney(data.getBuyCost() * data.getBuyAmount())));
+        String sell = C.mBody + "Right click to sell " + F.elem(String.valueOf(data.getSellAmount())) + "x " + F.capitalizeFirstLetter(data.getMaterial().name().replaceAll("_", " ")) + " for " + type.getSymbol() + F.elem(UtilMath.fixMoney(data.getSellCost() * data.getBuyAmount()));
+        if (data.getSellCost() == 0)
+            sell = C.cRed + C.Bold + "This item cannot be sold";
+        lore.add(sell);
+        String buy = C.mBody + "Left click to buy " + F.elem(String.valueOf(data.getBuyAmount())) + "x " + F.capitalizeFirstLetter(data.getMaterial().name().replaceAll("_", " ")) + " for " + type.getSymbol() + F.elem(UtilMath.fixMoney(data.getBuyCost() * data.getBuyAmount()));
+        if(data.getBuyCost() == 0)
+            buy = C.cRed + C.Bold + "This item cannot be purchased";
+        lore.add(buy);
         return lore;
     }
 
@@ -45,19 +51,14 @@ public abstract class PurchasableItem<PluginType extends Module> extends ShopIte
 
     @Override
     public void onClick(Player player, ClickType clickType) {
-        System.out.println(" ");
-        System.out.println("Click");
         if (type == CurrencyType.MONEY) {
-            System.out.println("MONEY");
             if (economy == null) {
                 System.out.println("Economy is not setup with the plugin.");
                 UtilPlayer.message(player, F.main("Shop", C.cRed
                         + "Economy is not setup with the plugin. If you believe this is an error please contact a server administrator."));
                 return;
             }
-            System.out.println("CHECKING");
             if (clickType == ClickType.RIGHT) {
-                System.out.println("RIGHT");
                 EconomyResponse response = economy.withdrawPlayer(player, (data.getBuyCost() * data.getBuyAmount()));
                 if (response.transactionSuccess()) {
                     if (additionalPurchaseChecks(player, PurchaseType.BUY)) {
@@ -75,7 +76,6 @@ public abstract class PurchasableItem<PluginType extends Module> extends ShopIte
                     return;
                 }
             } else if (clickType == ClickType.LEFT) {
-                System.out.println("LEFT");
                 if (UtilInv.remove(player, data.getMaterial(), data.getData(), data.getSellAmount())) {
                     if (additionalPurchaseChecks(player, PurchaseType.SELL)) {
                         economy.depositPlayer(player, (data.getSellCost() * data.getSellAmount()));

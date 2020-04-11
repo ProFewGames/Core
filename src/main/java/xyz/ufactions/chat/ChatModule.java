@@ -8,7 +8,9 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import xyz.ufactions.api.Module;
 import xyz.ufactions.chat.commands.ClearChatCommand;
+import xyz.ufactions.chat.commands.MessageCommand;
 import xyz.ufactions.chat.commands.MuteChatCommand;
+import xyz.ufactions.chat.commands.ReplyCommand;
 import xyz.ufactions.chat.config.AutobroadcastConfiguration;
 import xyz.ufactions.libs.*;
 import xyz.ufactions.updater.UpdateType;
@@ -125,5 +127,7 @@ public class ChatModule extends Module {
     public void addCommands() {
         addCommand(new MuteChatCommand(this));
         addCommand(new ClearChatCommand(this));
+        addCommand(new MessageCommand(this));
+        addCommand(new ReplyCommand(this));
     }
 }

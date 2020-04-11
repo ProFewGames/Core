@@ -5,6 +5,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import xyz.ufactions.database.DBPool;
 import xyz.ufactions.database.RepositoryBase;
 import xyz.ufactions.database.ResultSetCallable;
+import xyz.ufactions.database.SourceType;
 import xyz.ufactions.database.column.ColumnInt;
 import xyz.ufactions.database.column.ColumnVarChar;
 import xyz.ufactions.tags.event.TokenUpdateEvent;
@@ -32,7 +33,7 @@ public class TitleRepository extends RepositoryBase {
 	private final String DELETE_TAG_STATEMENT = "DELETE FROM `player_active_tag` WHERE `player_uuid` = ?;";
 
 	public TitleRepository(JavaPlugin plugin) {
-		super(plugin, DBPool.MAIN);
+		super(plugin, DBPool.getSource(SourceType.NETWORK));
 	}
 
 	public int getTokens(UUID uuid) {

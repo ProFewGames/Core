@@ -5,6 +5,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.plugin.java.JavaPlugin;
 import xyz.ufactions.database.DBPool;
 import xyz.ufactions.database.RepositoryBase;
+import xyz.ufactions.database.SourceType;
 import xyz.ufactions.database.column.ColumnInt;
 import xyz.ufactions.database.column.ColumnVarChar;
 import xyz.ufactions.help.data.Report;
@@ -23,7 +24,7 @@ public class ReportRepository extends RepositoryBase {
     private final String INSERT = "INSERT INTO `reports` (`reporter`, `reported`, `reason`) VALUES (?, ?, ?);";
 
     public ReportRepository(JavaPlugin plugin) {
-        super(plugin, DBPool.MAIN);
+        super(plugin, DBPool.getSource(SourceType.NETWORK));
     }
 
     public void deleteReports(OfflinePlayer player) {

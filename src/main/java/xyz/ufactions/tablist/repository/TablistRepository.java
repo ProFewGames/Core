@@ -9,6 +9,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import xyz.ufactions.database.DBPool;
 import xyz.ufactions.database.RepositoryBase;
 import xyz.ufactions.database.ResultSetCallable;
+import xyz.ufactions.database.SourceType;
 import xyz.ufactions.database.column.ColumnVarChar;
 
 public class TablistRepository extends RepositoryBase {
@@ -20,7 +21,7 @@ public class TablistRepository extends RepositoryBase {
 	private final String UPDATE_TABLIST = "UPDATE `tablist` SET `tab`=? WHERE `group`=?;";
 
 	public TablistRepository(JavaPlugin plugin) {
-		super(plugin, DBPool.MAIN);
+		super(plugin, DBPool.getSource(SourceType.NETWORK));
 	}
 
 	public void updateTablist(String group, String tab) {
@@ -37,13 +38,9 @@ public class TablistRepository extends RepositoryBase {
 
 	public HashMap<String, String> getTablist() {
 		HashMap<String, String> tablist = new HashMap<>();
-		executeQuery(SELECT_TABLIST, new ResultSetCallable() {
-
-			@Override
-			public void processResultSet(ResultSet resultSet) throws SQLException {
-				while (resultSet.next()) {
-					tablist.put(resultSet.getString(2), resultSet.getString(3));
-				}
+		executeQuery(SELECT_TABLIST, resultSet -> {
+			while (resultSet.next()) {
+				tablist.put(resultSet.getString(2), resultSet.getString(3));
 			}
 		});
 		return tablist;

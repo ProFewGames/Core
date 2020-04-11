@@ -98,7 +98,7 @@ public class Tablist extends Module {
                         scoreboard.getTeam(group).unregister();
                     }
                     String prefix = tablist.get(group);
-                    if (prefix == null) prefix = "&4&lN/A&r";
+                    if (prefix == null) prefix = "&4&lN/A";
                     prefix = ChatColor.translateAlternateColorCodes('&', prefix);
                     scoreboard.registerNewTeam(group).setPrefix(prefix);
                 }

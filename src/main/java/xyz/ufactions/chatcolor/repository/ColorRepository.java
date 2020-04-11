@@ -12,6 +12,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import xyz.ufactions.database.DBPool;
 import xyz.ufactions.database.RepositoryBase;
 import xyz.ufactions.database.ResultSetCallable;
+import xyz.ufactions.database.SourceType;
 import xyz.ufactions.database.column.ColumnVarChar;
 
 public class ColorRepository extends RepositoryBase {
@@ -23,7 +24,7 @@ public class ColorRepository extends RepositoryBase {
 	private final String GET_COLOR_STATEMENT = "SELECT * FROM `player_colors` WHERE `player_uuid` = ?;";
 
 	public ColorRepository(JavaPlugin plugin) {
-		super(plugin, DBPool.MAIN);
+		super(plugin, DBPool.getSource(SourceType.NETWORK));
 	}
 
 	public ChatColor getColor(UUID uuid) {

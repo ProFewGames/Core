@@ -13,17 +13,21 @@ import xyz.ufactions.crates.CratesModule;
 import xyz.ufactions.help.HelpModule;
 import xyz.ufactions.market.MarketModule;
 import xyz.ufactions.monitor.LagMeter;
+import xyz.ufactions.motd.MOTDModule;
 import xyz.ufactions.npc.NPCModule;
 import xyz.ufactions.playtime.PlaytimeModule;
+import xyz.ufactions.redis.Utility;
 import xyz.ufactions.scoreboard.ScoreboardModule;
+import xyz.ufactions.selections.SelectionManager;
+import xyz.ufactions.selections.data.Selection;
 import xyz.ufactions.sidekick.SidekickModule;
 import xyz.ufactions.tablist.Tablist;
 import xyz.ufactions.tags.TitleModule;
+import xyz.ufactions.timings.TimingManager;
+import xyz.ufactions.transporter.TransporterModule;
 import xyz.ufactions.weather.WeatherModule;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 public class ModuleManager {
 
@@ -40,29 +44,57 @@ public class ModuleManager {
     }
 
     public void loadModules(String serverName) {
-//        loadModule(new PermissionsModule(plugin)); FIXME Waiting for module to be fixed to be re-enabled in core
-        loadModule(new CratesModule(plugin));
+        loadModules(serverName, Collections.emptyList());
+    }
+
+    public void loadModules(String serverName, List<Class<? extends Module>> disabledClasses) {
+        TimingManager.initialize(plugin);
+        if (!disabledClasses.isEmpty()) System.out.println("Modules ordered not to load: " + disabledClasses);
+        if (!disabledClasses.contains(CratesModule.class))
+            loadModule(new CratesModule(plugin));
+//        if (!disabledClasses.contains(PlaytimeModule.class))
         loadModule(new PlaytimeModule(plugin));
-        loadModule(new ColorModule(plugin));
-        loadModule(new TitleModule(plugin));
-        loadModule(new WeatherModule(plugin));
-        loadModule(new ScoreboardModule(plugin, serverName));
-        loadModule(new CoinModule(plugin));
-        if (Bukkit.getPluginManager().isPluginEnabled("EchoPet")) {
-            System.out.println("EchoPet dependency found! Enabling Sidekick module...");
-            loadModule(new SidekickModule(plugin));
+        if (!disabledClasses.contains(ColorModule.class))
+            loadModule(new ColorModule(plugin));
+        if (!disabledClasses.contains(TitleModule.class))
+            loadModule(new TitleModule(plugin));
+        if (!disabledClasses.contains(WeatherModule.class))
+            loadModule(new WeatherModule(plugin));
+        if (!disabledClasses.contains(ScoreboardModule.class))
+            loadModule(new ScoreboardModule(plugin, serverName));
+        if (!disabledClasses.contains(MOTDModule.class))
+            loadModule(new MOTDModule(plugin));
+        if (!disabledClasses.contains(CoinModule.class))
+            loadModule(new CoinModule(plugin));
+        if (!disabledClasses.contains(SidekickModule.class)) {
+            if (Bukkit.getPluginManager().isPluginEnabled("EchoPet")) {
+                loadModule(new SidekickModule(plugin));
+            } else {
+                System.out.println("Optional plugin 'EchoPet' will enable the sidekick module");
+            }
         }
-        loadModule(new BuilderModule(plugin));
-        loadModule(new ChatModule(plugin));
-        loadModule(new HelpModule(plugin));
-        if (!setupPermissions()) {
-            System.out.println("No vault permission dependency found! Tablist module not enabling");
-        } else {
-            loadModule(new Tablist(plugin, serverName, permission));
+        if (!disabledClasses.contains(BuilderModule.class))
+            loadModule(new BuilderModule(plugin));
+        if (!disabledClasses.contains(ChatModule.class))
+            loadModule(new ChatModule(plugin));
+        if (!disabledClasses.contains(HelpModule.class))
+            loadModule(new HelpModule(plugin));
+        if (!disabledClasses.contains(Tablist.class)) {
+            if (!setupPermissions()) {
+                System.out.println("No vault permission dependency found! Tablist module not enabling");
+            } else {
+                loadModule(new Tablist(plugin, serverName, permission));
+            }
         }
-        loadModule(new MarketModule(plugin));
-        loadModule(new NPCModule(plugin));
-        loadModule(new LagMeter(plugin));
+        if (!disabledClasses.contains(MarketModule.class))
+            loadModule(new MarketModule(plugin));
+        if (!disabledClasses.contains(NPCModule.class))
+            loadModule(new NPCModule(plugin));
+        SelectionManager selectionManager = null;
+        if (!disabledClasses.contains(SelectionManager.class))
+            loadModule((selectionManager = new SelectionManager(plugin)));
+        if (Utility.allowRedis() && selectionManager != null)
+            loadModule(new TransporterModule(plugin, selectionManager));
     }
 
     public void loadModule(Module module) {

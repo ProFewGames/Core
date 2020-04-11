@@ -10,6 +10,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import xyz.ufactions.database.DBPool;
 import xyz.ufactions.database.RepositoryBase;
 import xyz.ufactions.database.ResultSetCallable;
+import xyz.ufactions.database.SourceType;
 import xyz.ufactions.database.column.ColumnInt;
 import xyz.ufactions.database.column.ColumnVarChar;
 import xyz.ufactions.help.data.TodoStatus;
@@ -23,7 +24,7 @@ public class TODORepository extends RepositoryBase {
 	private final String UPDATE_TODO = "UPDATE `todo` SET `priority`=?,`status`=? WHERE `id`=?;";
 
 	public TODORepository(JavaPlugin plugin) {
-		super(plugin, DBPool.MAIN);
+		super(plugin, DBPool.getSource(SourceType.NETWORK));
 	}
 
 	public final void addTask(TodoTask task) {

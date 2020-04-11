@@ -11,6 +11,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import xyz.ufactions.database.DBPool;
 import xyz.ufactions.database.RepositoryBase;
 import xyz.ufactions.database.ResultSetCallable;
+import xyz.ufactions.database.SourceType;
 import xyz.ufactions.database.column.ColumnInt;
 import xyz.ufactions.database.column.ColumnVarChar;
 
@@ -22,7 +23,7 @@ public class CoinRepository extends RepositoryBase {
 	private static String UPDATE_COINS = "UPDATE player_coins SET coins = ? WHERE uuid = ?;";
 
 	public CoinRepository(JavaPlugin plugin) {
-		super(plugin, DBPool.MAIN);
+		super(plugin, DBPool.getSource(SourceType.NETWORK));
 	}
 
 	public int getCoins(UUID uuid) {
