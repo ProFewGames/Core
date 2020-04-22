@@ -41,6 +41,8 @@ public class TransporterModule extends Module {
     public TransporterModule(JavaPlugin plugin, SelectionManager selectionManager) {
         super("Transporter", selectionManager.getPlugin());
 
+        this.selectionManager = selectionManager;
+
         File file = new File(getDataFolder(), "data.yml");
         if (file.exists()) {
             FileConfiguration config = YamlConfiguration.loadConfiguration(file);

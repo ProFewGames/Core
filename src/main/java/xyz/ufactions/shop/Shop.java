@@ -62,22 +62,14 @@ public class Shop implements Listener {
         this.name = name;
         this.inventory = Bukkit.createInventory(null, length, name);
         sortInventory();
-        System.out.println(" ");
-        System.out.println(" ");
-        System.out.println("Filler is " + filler.toString());
-        System.out.println(" ");
-        System.out.println(" ");
         for (int i = 0; i < inventory.getSize(); i++) {
             if (inventory.getItem(i) != null && inventory.getItem(i).getType() != Material.AIR) {
-                System.out.println("Is not empty " + inventory.getItem(i));
                 continue;
             }
             if (filler == ShopFiller.NONE) {
-                System.out.println("Filler is none");
                 continue;
             }
             if (filler == ShopFiller.PANE) {
-                System.out.println("Setting at " + i);
                 inventory.setItem(i, new ItemBuilder(Material.STAINED_GLASS_PANE, 11).name(" ").build());
             }
         }

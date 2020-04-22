@@ -1,6 +1,8 @@
 package xyz.ufactions.help;
 
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -52,38 +54,42 @@ public class HelpModule extends Module {
         addCommand(new ReportCommand(this));
     }
 
-//    @EventHandler
+    @EventHandler
+    public void onCommandPreProcess(PlayerCommandPreprocessEvent e) {
+        if (e.getMessage().toLowerCase().startsWith("/pl") || e.getMessage().toLowerCase().startsWith("/plugins") && !e.getPlayer().isOp()) {
+            UtilPlayer.message(e.getPlayer(), C.cRed + "You do not have permission to this command. Ask a staff for help!");
+            e.setCancelled(true);
+        }
+    }
+
+    //    @EventHandler
     public void onJoin(PlayerJoinEvent e) {
         final Player player = e.getPlayer();
         notified.put(player.getUniqueId(), 0);
 
         if (player.hasPermission("core.command.changelog")) {
-            runAsync(new Runnable() {
-
-                @Override
-                public void run() {
-                    List<ChangeLog> changes = getChangelog().getChanges(5);
-                    if (changes.isEmpty()) {
-                        UtilPlayer.message(player, F.main(Plugin.getName(), "There have been no changes made while you were offline!"));
-                    } else {
-                    	int id = notified.get(player.getUniqueId());
-                    	boolean messaged = false;
-                    	int top = id;
-                        for (ChangeLog change : changes) {
-                        	if(id < change.getId()) {
-                        		if(!messaged) {
-									UtilPlayer.message(player, C.mHead + C.Strike + "----------------------------");
-									messaged = true;
-								}
-								UtilPlayer.message(player, C.mHead + "- " + C.mBody + change.getChange());
-                        		top = change.getId();
-							}
+            runAsync(() -> {
+                List<ChangeLog> changes = getChangelog().getChanges(5);
+                if (changes.isEmpty()) {
+                    UtilPlayer.message(player, F.main(Plugin.getName(), "There have been no changes made while you were offline!"));
+                } else {
+                    int id = notified.get(player.getUniqueId());
+                    boolean messaged = false;
+                    int top = id;
+                    for (ChangeLog change : changes) {
+                        if (id < change.getId()) {
+                            if (!messaged) {
+                                UtilPlayer.message(player, C.mHead + C.Strike + "----------------------------");
+                                messaged = true;
+                            }
+                            UtilPlayer.message(player, C.mHead + "- " + C.mBody + change.getChange());
+                            top = change.getId();
                         }
-                        notified.remove(player.getUniqueId());
-						notified.put(player.getUniqueId(), top);
-						if(messaged) {
-							UtilPlayer.message(player, C.mHead + C.Strike + "----------------------------");
-						}
+                    }
+                    notified.remove(player.getUniqueId());
+                    notified.put(player.getUniqueId(), top);
+                    if (messaged) {
+                        UtilPlayer.message(player, C.mHead + C.Strike + "----------------------------");
                     }
                 }
             });

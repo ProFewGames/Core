@@ -17,90 +17,81 @@ import xyz.ufactions.libs.UtilPlayer;
 
 public class CoinModule extends Module {
 
-	private CoinRepository repository;
+    private CoinRepository repository;
 
-	private HashMap<Player, Integer> coins = new HashMap<>();
+    private HashMap<Player, Integer> coins = new HashMap<>();
 
-	public CoinModule(JavaPlugin plugin) {
-		super("Coins", plugin);
+    public CoinModule(JavaPlugin plugin) {
+        super("Coins", plugin);
 
-		repository = new CoinRepository(plugin);
-	}
+        repository = new CoinRepository(plugin);
+    }
 
-	@Override
-	public void addCommands() {
-		addCommand(new CoinCommand(this));
-	}
+    @Override
+    public void addCommands() {
+        addCommand(new CoinCommand(this));
+    }
 
-	public int getCoins(Player player) {
-		if (!coins.containsKey(player)) {
-			login(player);
-		}
-		return coins.get(player);
-	}
+    public int getCoins(Player player) {
+        if (!coins.containsKey(player)) {
+            login(player);
+        }
+        return coins.get(player);
+    }
 
-	public void canRemoveCoins(final Callback<Boolean> callback, final Player player, final int cost) {
-		runAsync(new Runnable() {
+    public void canRemoveCoins(final Callback<Boolean> callback, final Player player, final int cost) {
+        runAsync(new Runnable() {
 
-			@Override
-			public void run() {
-				final boolean canRemove = repository.getCoins(player.getUniqueId()) - cost < 0;
-				runSync(new Runnable() {
+            @Override
+            public void run() {
+                final boolean canRemove = repository.getCoins(player.getUniqueId()) - cost < 0;
+                runSync(new Runnable() {
 
-					@Override
-					public void run() {
-						callback.run(canRemove);
-					}
-				});
-			}
-		});
-	}
+                    @Override
+                    public void run() {
+                        callback.run(canRemove);
+                    }
+                });
+            }
+        });
+    }
 
-	public void addCoins(final Player caller, final Player target, final int coins) {
-		runAsync(new Runnable() {
+    public void addCoins(final Player caller, final Player target, final int coins) {
+        runAsync(() -> {
+            repository.addCoins(target.getUniqueId(), coins);
+            final int newCoins = repository.getCoins(target.getUniqueId());
+            CoinModule.this.coins.put(target, newCoins);
+			UtilPlayer.message(target, F.main(getName(), "Your new coin balance is: " + F.elem(String.valueOf(newCoins)) + "."));
+            if (caller != null) {
+                UtilPlayer.message(caller, F.main(getName(),
+                        F.elem(target.getName()) + "'s new coin balance: " + F.elem(newCoins + "") + "."));
+                runSync(() -> UtilPlayer.message(caller,
+                        F.main(getName(),
+                                F.elem(Math.abs(coins) + "") + " coins "
+                                        + (coins < 0 ? "removed from" : "added to") + " "
+                                        + F.elem(target.getName()))));
+            }
+        });
+    }
 
-			@Override
-			public void run() {
-				repository.addCoins(target.getUniqueId(), coins);
-				final int newCoins = repository.getCoins(target.getUniqueId());
-				CoinModule.this.coins.put(target, newCoins);
-				if (caller != null) {
-					UtilPlayer.message(caller, F.main(getName(),
-							F.elem(target.getName()) + "'s new coin balance: " + F.elem(newCoins + "") + "."));
-					runSync(new Runnable() {
+    private void login(final Player player) {
+        coins.put(player, 0);
+        runAsync(new Runnable() {
 
-						@Override
-						public void run() {
-							UtilPlayer.message(caller,
-									F.main(getName(),
-											F.elem(Math.abs(coins) + "") + " coins "
-													+ (coins < 0 ? "removed from" : "added to") + " "
-													+ F.elem(target.getName())));
-						}
-					});
-				}
-			}
-		});
-	}
+            @Override
+            public void run() {
+                coins.put(player, repository.getCoins(player.getUniqueId()));
+            }
+        });
+    }
 
-	private void login(final Player player) {
-		coins.put(player, 0);
-		runAsync(new Runnable() {
+    @EventHandler
+    public void onJoin(PlayerJoinEvent e) {
+        login(e.getPlayer());
+    }
 
-			@Override
-			public void run() {
-				coins.put(player, repository.getCoins(player.getUniqueId()));
-			}
-		});
-	}
-
-	@EventHandler
-	public void onJoin(PlayerJoinEvent e) {
-		login(e.getPlayer());
-	}
-
-	@EventHandler
-	public void onQuit(PlayerQuitEvent e) {
-		coins.remove(e.getPlayer());
-	}
+    @EventHandler
+    public void onQuit(PlayerQuitEvent e) {
+        coins.remove(e.getPlayer());
+    }
 }

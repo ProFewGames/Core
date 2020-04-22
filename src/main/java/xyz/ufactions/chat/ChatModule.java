@@ -5,6 +5,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import xyz.ufactions.api.Module;
 import xyz.ufactions.chat.commands.ClearChatCommand;
@@ -16,7 +17,9 @@ import xyz.ufactions.libs.*;
 import xyz.ufactions.updater.UpdateType;
 import xyz.ufactions.updater.event.UpdateEvent;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 public class ChatModule extends Module {
@@ -32,6 +35,8 @@ public class ChatModule extends Module {
 
     private UpdateType updateType;
 
+    private Map<Player, BossBar> bars = new HashMap<>();
+
     public ChatModule(JavaPlugin plugin) {
         super("Chat", plugin);
 
@@ -41,6 +46,32 @@ public class ChatModule extends Module {
 
         if (broadcasts.isEmpty()) {
             autobroadcast = false;
+        }
+    }
+
+    @Override
+    public void disable() {
+        for (Player player : bars.keySet()) {
+            removeBar(player);
+        }
+    }
+
+    @EventHandler
+    public void onQuit(PlayerQuitEvent e) {
+        removeBar(e.getPlayer());
+    }
+
+    @EventHandler
+    public void bossBarUpdate(UpdateEvent e) {
+        if (e.getType() != UpdateType.FAST) return;
+
+        for (Player player : bars.keySet()) {
+            BossBar bar = bars.get(player);
+            if (bar.elapsed()) {
+                removeBar(player);
+            } else {
+                bar.update();
+            }
         }
     }
 
@@ -121,6 +152,23 @@ public class ChatModule extends Module {
                 UtilPlayer.message(pls,
                         C.cGray + "Chat has been cleared by " + sender.getDisplayName() + C.cGray + ".");
         }
+    }
+
+    public void showBar(Player player, String message, long timeout) {
+        bars.put(player, new BossBar(player, timeout, message));
+    }
+
+    public void updateBarMessage(Player player, String message) {
+        bars.get(player).setMessage(message);
+    }
+
+    public boolean hasBar(Player player) {
+        return bars.containsKey(player);
+    }
+
+    public void removeBar(Player player) {
+        BossBar bar = bars.remove(player);
+        if(bar!=null) bar.removeWither();
     }
 
     @Override

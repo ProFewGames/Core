@@ -17,6 +17,10 @@ public class VisibilityManager extends Module {
 
     public static VisibilityManager instance;
 
+    public static void initialize(JavaPlugin plugin) {
+        if(instance == null) instance = new VisibilityManager(plugin);
+    }
+
     private NautHashMap<Player, VisibilityData> data = new NautHashMap<>();
 
     protected VisibilityManager(JavaPlugin plugin) {

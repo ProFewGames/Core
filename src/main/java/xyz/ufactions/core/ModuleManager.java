@@ -9,25 +9,31 @@ import xyz.ufactions.builder.BuilderModule;
 import xyz.ufactions.chat.ChatModule;
 import xyz.ufactions.chatcolor.ColorModule;
 import xyz.ufactions.coins.CoinModule;
+import xyz.ufactions.combat.CombatManager;
+import xyz.ufactions.condition.ConditionManager;
 import xyz.ufactions.crates.CratesModule;
+import xyz.ufactions.creature.Creature;
+import xyz.ufactions.damage.DamageManager;
 import xyz.ufactions.help.HelpModule;
 import xyz.ufactions.market.MarketModule;
-import xyz.ufactions.monitor.LagMeter;
 import xyz.ufactions.motd.MOTDModule;
 import xyz.ufactions.npc.NPCModule;
 import xyz.ufactions.playtime.PlaytimeModule;
 import xyz.ufactions.redis.Utility;
 import xyz.ufactions.scoreboard.ScoreboardModule;
 import xyz.ufactions.selections.SelectionManager;
-import xyz.ufactions.selections.data.Selection;
 import xyz.ufactions.sidekick.SidekickModule;
 import xyz.ufactions.tablist.Tablist;
 import xyz.ufactions.tags.TitleModule;
 import xyz.ufactions.timings.TimingManager;
 import xyz.ufactions.transporter.TransporterModule;
+import xyz.ufactions.visibility.VisibilityManager;
 import xyz.ufactions.weather.WeatherModule;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 
 public class ModuleManager {
 
@@ -49,10 +55,21 @@ public class ModuleManager {
 
     public void loadModules(String serverName, List<Class<? extends Module>> disabledClasses) {
         TimingManager.initialize(plugin);
+        VisibilityManager.initialize(plugin);
         if (!disabledClasses.isEmpty()) System.out.println("Modules ordered not to load: " + disabledClasses);
+        if (!disabledClasses.contains(Creature.class))
+            loadModule(new Creature(plugin));
+        CombatManager combatManager = null;
+        if (!disabledClasses.contains(CombatManager.class))
+            loadModule((combatManager = new CombatManager(plugin)));
+        ConditionManager conditionManager = null;
+        if (!disabledClasses.contains(ConditionManager.class))
+            loadModule((conditionManager = new ConditionManager(plugin)));
+        if (!disabledClasses.contains(DamageManager.class))
+            loadModule(new DamageManager(plugin, combatManager, conditionManager));
         if (!disabledClasses.contains(CratesModule.class))
             loadModule(new CratesModule(plugin));
-//        if (!disabledClasses.contains(PlaytimeModule.class))
+        if (!disabledClasses.contains(PlaytimeModule.class))
         loadModule(new PlaytimeModule(plugin));
         if (!disabledClasses.contains(ColorModule.class))
             loadModule(new ColorModule(plugin));
